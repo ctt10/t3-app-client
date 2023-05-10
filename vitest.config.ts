@@ -10,7 +10,10 @@ const config = {
   plugins: [react()],
   test: {
     environment: 'jsdom',
-    setupFiles: '__tests__/helpers/setup.ts',
+    setupFiles: [
+      '__tests__/setup/index.ts',
+      '__tests__/setup/LocalStorageMock.ts',
+    ],
   },
   resolve: {
     alias: {

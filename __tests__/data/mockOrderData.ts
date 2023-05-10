@@ -1,7 +1,7 @@
 import { v4 as uuidV4 } from "uuid";
 import { mockOrderItems, mockGalleryItem } from "./mockItemData";
 import { type CreateOrderInputParams, type ICartItem, type ICart } from "@/types";
-import { CalcOrderTotal } from "./OrderMath";
+import { CalcOrderTotal } from "../helpers/OrderMath";
 
 export interface OrderFormInputs {
   label: string

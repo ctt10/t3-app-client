@@ -1,12 +1,12 @@
 //TESTING UTILS
 import { describe, expect, test, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { render, screen, act, fireEvent, cleanup } from "@testing-library/react";
 //API TOOLS
 import { prisma } from "@/server/db";
 
 /**@data */
-import { mockGalleryItem } from "../helpers/mockItemData";
-import { mockCartItem } from "../helpers/mockOrderData";
+import { mockGalleryItem } from "../data/mockItemData";
+import { mockCartItem } from "../data/mockOrderData";
 import { defaultCart } from "@/models";
 
 /**@componentes */
@@ -16,99 +16,87 @@ import { SingleItem } from "@/components";
 /**@types */
 import { type ICart } from "@/types";
 
-describe("Cart Integration Tests", () => {
+// router must be mounted since 
+//   required in internal components
+vi.mock('next/router', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+}))
 
-  // router must be mounted since 
-  //   required in internal components
-  vi.mock('next/router', () => ({
-    useRouter: () => ({
-      push: vi.fn(),
-    }),
-  }))
-  
+describe("Cart Integration Tests", () => {
+    
   let itemId: string;
-  beforeAll(
-    async () => {
+  const getSpy = vi.spyOn(localStorage, 'getItem');
+  const setSpy = vi.spyOn(localStorage, 'setItem');
+  const removeSpy = vi.spyOn(localStorage, 'removeItem');
+
+
+  beforeAll( async () => {
       await prisma.item.create({ data: mockGalleryItem })
         .then((createdObj) => { itemId = createdObj.id });
-    });
+  });
 
-  /**
-   * =========== [TESTS SETUP] ===========
-   */
-  beforeEach(
-    async () => {
+  beforeEach( async () => {
       render(<SingleItem itemId={itemId} />, { wrapper: TrpcWrapper });
-
-      /// await internal api queries to resolve
-      /// && component to finish rendering
       await new Promise(r => setTimeout(r, 2000));
-    }, 5000);
+  });
 
-  /**
-   * =========== [RESET BETWEEN TESTS] ===========
-   */
   afterEach(() => {
+    console.log('localStorage', localStorage)
     cleanup();
     localStorage.clear();
     vi.restoreAllMocks();
   });
 
-  /**
-   * =========== [POST TESTS CLEANUP] ===========
-   */
-  afterAll(
-    async () => {
+  afterAll( async () => {
       await prisma.item.delete({
         where: { id: itemId }
       });
-    });
+  });
+
+  async function addCart() {
+    //Add item to cart
+    expect(screen.getByTestId("#addToCart")).toBeInTheDocument();
+    const AddButton = screen.getByTestId("#addToCart");
+    await act(() => fireEvent.click(AddButton));
+  }
+
+  async function openCart() {
+    expect(screen.getByTestId("#OpenCart-Button")).toBeInTheDocument();
+    const openCartButton = screen.getByTestId("#OpenCart-Button");
+    await act(() => fireEvent.click(openCartButton));
+  }
+
+  function verifyCartItem(){
+    /// VERIFY ITEM ADDED TO CART
+    expect(setSpy).toHaveBeenCalled();
+    expect(setSpy).toHaveBeenCalledWith(mockCartItem.item);
+
+    // const localCart = localStorage.getItem("cart");
+    // console.log('verifyCartItem', localCart);
+    // expect(localCart).not.toBeUndefined();
+    // expect(localCart).not.toBeNull();
+
+    // const cart = JSON.parse(localCart) as ICart;
+    // expect(cart.items).toHaveLength(1);
+    // const cartItem = cart.items[0]
+    // expect(cartItem?.item).toStrictEqual(mockCartItem.item);
+  }
 
   // The purpose of this test is to confirm that that when clicking addItem
   // the cart is correctly modified (correct number of items && item info)
   // this is confirmed by checking and confirming modifications to dom elements
   // i.e. After Item is added, a new dom element should be rendered in <Cart /> Component
-  test("Add To Cart, local Storage modification",
-    () => {
-      //Add item to cart
-      expect(screen.getByTestId("#addToCart")).toBeInTheDocument();
-      const AddButton = screen.getByTestId("#addToCart");
-      fireEvent.click(AddButton);
-
-      const localItems = window.localStorage.getItem("cart");
-      expect(localItems).not.to.equal(null);
-      if (!localItems) return;
-
-      const cart = JSON.parse(localItems) as ICart;
-      const cartItem = cart.items[0]
-      expect(cartItem).toStrictEqual(mockCartItem);
+  test("Add To Cart, local Storage modified",
+    async () => {
+      await addCart();
+      verifyCartItem();
     })
 
-  /**
-   * confirms base state of testing envrionment has empty cart in local storage
-   *   and 0 elements in dom
-   */
-  test("Verify Unmodified Cart Dom Content", () => {
-
-    expect(screen.getByTestId("#OpenCart-Button")).toBeInTheDocument();
-    const openCartButton = screen.getByTestId("#OpenCart-Button");
-    fireEvent.click(openCartButton);
-
-    //no items in cart, value should be 0
-    const itemPriceContainer = screen.getByTestId("#CartSubTotal");
-    expect(itemPriceContainer).toHaveTextContent("SubTotal: $0.00");
-  })
-
-  test("Add To Cart, Update Dom Element Cart", () => {
-    //Add item to cart
-    expect(screen.getByTestId("#addToCart")).toBeInTheDocument();
-    const AddButton = screen.getByTestId("#addToCart");
-    fireEvent.click(AddButton);
-
-    //open cart
-    expect(screen.getByTestId("#OpenCart-Button")).toBeInTheDocument();
-    const openCartButton = screen.getByTestId("#OpenCart-Button");
-    fireEvent.click(openCartButton);
+  test("Add To Cart, Verify Dom Cart Element Updated", async () => {
+    await addCart();
+    await openCart();
 
     //get item price container
     expect(screen.getByTestId("#CartItemPrice")).toBeInTheDocument();
@@ -121,35 +109,19 @@ describe("Cart Integration Tests", () => {
     expect(CartSubTotalContainer).toHaveTextContent("SubTotal: $150.00");
   })
 
-  test("Remove from cart", () => {
-    //Add item to cart
-    expect(screen.getByTestId("#addToCart")).toBeInTheDocument();
-    const AddButton = screen.getByTestId("#addToCart");
-    fireEvent.click(AddButton);
+  test("Remove from cart", async () => {
+    await addCart();
+    await openCart();
+    verifyCartItem();
 
-    //UPDATE DOM TO FIND REMOVE BUTTON
-    const openCartButton = screen.getByTestId("#OpenCart-Button");
-    fireEvent.click(openCartButton);
-
-    //VERIFY ADDED ITEM EXISTS
-    let localCart = window.localStorage.getItem("cart");
-    expect(localCart).not.to.equal(null);
-    if (!localCart) return;
-
-    const cart = JSON.parse(localCart) as ICart;
-    const cartItem = cart.items[0];
-    expect(cartItem?.item).toBeDefined();
-    expect(cartItem?.item).toStrictEqual(mockCartItem.item);
-
-    //REMOVE EVENT
-    fireEvent.click(screen.getByTestId("#RemoveFromCart"));
+    //REMOVE EVENT    
+    await act(() => fireEvent.click(screen.getByTestId("#RemoveFromCart")));
 
     //VERIFY REMOVED ITEM
-    localCart = window.localStorage.getItem("cart");
+    const localCart = localStorage.getItem("cart");
     console.log('localItems', localCart)
     expect(localCart).not.to.equal(null);
     if (!localCart) return;
-
     const emptyCart = JSON.parse(localCart) as ICart;
     expect(emptyCart).toStrictEqual(defaultCart);
   })

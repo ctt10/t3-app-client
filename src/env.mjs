@@ -85,9 +85,10 @@ let env = /** @type {MergedOutput} */ (process.env);
 
 if (!!process.env.SKIP_ENV_VALIDATION == false) {
   const isServer = (typeof window === "undefined");
+  const isTest = (process.env.NODE_ENV === "test");
 
   const parsed = /** @type {MergedSafeParseReturn} */ (
-    isServer
+      isServer || isTest
       ? merged.safeParse(processEnv) // on server we can validate all env vars
       : client.safeParse(processEnv) // on client we can only validate the ones that are exposed
   );
@@ -105,7 +106,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
       if (typeof prop !== "string") return undefined;
       // Throw a descriptive error if a server-side env var is accessed on the client
       // Otherwise it would just be returning `undefined` and be annoying to debug
-      if (!isServer && process.env.NODE_ENV !== "test" && !prop.startsWith("NEXT_PUBLIC_"))
+      if (!isServer && !isTest && !prop.startsWith("NEXT_PUBLIC_"))
         throw new Error(
           process.env.NODE_ENV === "production"
             ? "❌ Attempted to access a server-side environment variable on the client"

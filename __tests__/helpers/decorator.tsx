@@ -14,7 +14,6 @@ import { OrderContextProvider } from "@/context/OrderContext";
  * This file sets up a wrapper around main App component
  *   this setups up Context so that trpc can be tested 
  */
-
 export function TrpcWrapper({ children }: PropsWithChildren<object>) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>

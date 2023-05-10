@@ -21,7 +21,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [openMenu, setOpenMenu] = useState<ICartContext["openMenu"]>(defaultCartContext.openMenu);
 
     //TODO: MODIFY THIS TO ACCEPT QUANTIY
-    async function addToCart(quantity: number, item: IGalleryItem): Promise<void> {        
+    async function addToCart(quantity: number, item: IGalleryItem|null): Promise<void> {        
         if (!item || !item.id || quantity <= 0) return;
         const filtered:ICartItem[] = cart.items?.filter((el: ICartItem) => el.item?.id === item.id);
         const cartItem = filtered[0];

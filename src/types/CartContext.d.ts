@@ -11,7 +11,7 @@ export declare interface ICartContext {
 	setQuantity: Dispatch<SetStateAction<number>>
 
 	//CartContext
-	addToCart: (quantity:number, item: IGalleryItem) => Promise<void>,
+	addToCart: (quantity:number, item: IGalleryItem | null) => Promise<void>,
 	removeFromCart: (item: IGalleryItem, cart: ICart) => Promise<void>,
 	emptyCart: () => Promise<void>,
 }

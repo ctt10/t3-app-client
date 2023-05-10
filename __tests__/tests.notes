@@ -1,4 +1,9 @@
-
+/**
+ * Setup Requirements:
+ *    - Nextjs trpc app requires a wrapper implemented using react trpc client 
+ *    - Trpc client is required to encase App component to test, including all Context providers
+ */
+ 
 describe ("E2E TEST, Modity Cart && Stripe payment intent before checkout":
    1 A USER NAVIGATING FROM THE HOME PAGE, TO A SINGLE ITEM PAGE, 
    2. LOAD ITEM 
