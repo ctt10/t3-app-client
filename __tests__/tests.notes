@@ -1,0 +1,41 @@
+
+describe ("E2E TEST, Modity Cart && Stripe payment intent before checkout":
+   1 A USER NAVIGATING FROM THE HOME PAGE, TO A SINGLE ITEM PAGE, 
+   2. LOAD ITEM 
+   3. ADD {n: quantity} TO CART, GENERATE STRIPE PAYMENT INTENT, 
+      - verify cart values, displayed order subtotal
+   4. FILL OUT SHIPPING INFO FORM, 
+      - verify errors work
+      - verify dom elements present
+   4. GENERATE STRIPE PAYMENT INTENT
+      - verify data sent
+      - values of payment Intent before during, && after
+         - local storage
+         - html document
+   5. MODIFY CART
+      - values before during, && after
+         - local storage
+         - html document
+   6. UPDATE STRIPE PAYMENT INTENT
+      - values before during, && after
+         - local storage
+         - html document
+   7. CREATE AN ORDER
+      - verify data sent
+
+   8. TEST DB OUTPUT
+      - Does it match input || is result achieved
+
+
+describe ("E2E TEST, Add to cart && Generate StripePaymentIntent before checkout", () => {});
+
+
+
+MOST IMPORTANT TEST IS THAT THE DATA GOING INTO THE API REQUEST IS CORRECT, 
+THE CORRECT ITEM IDS, THE CORRECT ITEMS ARE LINKED TO THE ORDER, THE ORDER TOTAL IS CORRECT AND CANNOT BE MODIFIED
+
+
+
+WHEN SPYING ON A FUNCTION THAT HASNT BEEN MOCKED IT USES REAL FUNCIONS AND INTERACTS WITH EXTERNAL RESOURCES
+
+WHEN SPYING ON A FUNCTION THAT HAS BEEN MOCKED, A REPLICA OF THAT FUNCTION IS CREATED IN TESTING ENV
