@@ -5,7 +5,7 @@ import { galleryThemes } from '@/utils/constants/galleryThemes'
 
 export const itemTypes = ["Macrame", "Gemstone"];
 export const MacrameSubTypes = ["Necklace","Bracelet","Ring","Forehead","Waist"];
-export const GemstoneSubTypes = ["Amethysz","Azurite","Garnet","Herkimer Diamond","Quarts"];
+export const GemstoneSubTypes = ["Amethyst", "Azurite", "Garnet", "Herkimer Diamond", "Quarts"];
 
 
 export const mockItems: CreateItemInputParams[] = [{
@@ -23,8 +23,8 @@ export const mockItems: CreateItemInputParams[] = [{
   theme: galleryThemes[1] as string,
   description: "this is a test item created in client tests",
   price:75,
-  itemType:"Macrame",
-  subType: "Bracelet",
+  itemType:"Gemstone",
+  subType: "Amethyst",
   quantity: 1,
 }];
 
@@ -68,5 +68,4 @@ export const mockGalleryItem: IGalleryItem = {
   subType: "Bracelet",
   quantity: 1,
   description: "This is a descirption of a Test Gallery Item",
-  createdAt: new Date().toISOString(),
 };

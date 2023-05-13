@@ -1,4 +1,4 @@
-import { useContext, type FC } from "react";
+import React, { useContext, type FC } from "react";
 import { CartContext } from "@/context/CartContext";
 import Image from "next/image";
 import { useRouter } from 'next/router';

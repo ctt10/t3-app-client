@@ -1,6 +1,5 @@
 import React, { useEffect, useState, createContext } from "react";
 import { type IItemContext } from "@/types";
-import formatItems from "@/utils/formatItems";
 import { useFetchSingle } from "@/utils/hooks/useFetchSingle";
 import { useFetchTheme } from "@/utils/hooks/useFetchTheme";
 import { useFetchType } from "@/utils/hooks/useFetchType";
@@ -45,21 +44,15 @@ export const ItemContextProvider = ({ children }: { children: React.ReactNode })
 
 	useEffect(() => {
 		if (!!singleItem) {
-			const { id, name, media, theme, price, itemType, subType, quantity, description, createdAt } = singleItem;
-			setFetchedItem({
-				id, name, media, theme, price, itemType, subType, quantity, description,
-				createdAt: new Date(createdAt).toISOString()
-			});
+	      setFetchedItem(singleItem);
 		}
 
 		if (!!itemsByTheme) {
-			const formattedItems = formatItems(itemsByTheme);
-			setFetchedItems(formattedItems)
+			setFetchedItems(itemsByTheme)
 		}
 
 		if (!!itemsByType) {
-			const formattedItems = formatItems(itemsByType);
-			setFetchedItems(formattedItems)
+			setFetchedItems(itemsByType)
 		}
 	}, [setFetchedItems, setFetchedItem, singleItem, itemsByTheme, itemsByType])
 

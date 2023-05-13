@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect, createContext, useContext, type ReactNode } from "react";
 import calculateOrderAmount from "@/utils/calculateOrderAmount";
 import { CartContext } from "@/context/CartContext";

@@ -6,46 +6,61 @@ import { appRouter } from '@/server/api/root';
 import { prisma } from "@/server/db";
 
 /**@data */
-import { mockOrderItems } from "../helpers/mockItemData";
-import { mockOrderInput } from "../helpers/mockOrderData";
-import { type IGalleryItem, type PrismaItemId } from '@/types';
+import { mockOrderItems } from "../data/mockItemData";
+import { mockOrderInput } from "../data/mockOrderData";
+import { type IGalleryItem } from '@/types';
 
-describe("Order Creation E2E test", () => {
+describe("Order Creation", () => {
 
-  const itemIds:PrismaItemId[]= [];
   let orderId:string;
+  const itemIds: string[] = [];
   const caller = appRouter.createCaller({ session: null, prisma });
 
-  /**
-   * =========== [TESTS SETUP] ===========
-   */
-  //paymentId is currently null
-  beforeAll(
-    async() => {
-      await prisma.item.create({ data: mockOrderItems[0]?.item as IGalleryItem })
-        .then((createdObj) => { itemIds.push({ id: createdObj.id }) });
-      await prisma.item.create({ data: mockOrderItems[1]?.item as IGalleryItem })
-        .then((createdObj) => { itemIds.push({ id: createdObj.id }) });
-  
-      return async () => {
-        for (const val of itemIds) {
-          await prisma.item.delete({
-            where: {
-              id: val.id
-            }
-          });
-        }
-        if (!!orderId) {
-          await prisma.item.delete({
-            where: { id: orderId }
-          });
-        }
-      }
+  beforeAll(async () => {
+    for (const obj of mockOrderItems) {
+      if (!obj) return;
+      await prisma.item.create({ data: obj.item as IGalleryItem })
+        .then((createdObj) => {
+          itemIds.push(createdObj.id);
+        });
+    }
   });
 
+  afterAll(async () => {
+    await prisma.item.deleteMany({
+      where: {
+        id: { in: itemIds },
+      }
+    })
+
+    if (!!orderId) {
+      await prisma.item.delete({
+        where: { id: orderId }
+      });
+    }
+  });
+
+  
+  describe("Unmounted Create Order API Request", () => {
+
+    test("Throws an Error", async () => {
+      // expect(await caller.order.create(null)).toThrowError()
+      // expect(
+      //   caller.order.create(null)
+      // ).toThrowError();
+
+      // const response = await caller.order.create(null);
+      // expect(response).toBeNull();
+    });
+
+    test("Resolves with order created", async () => {
+      // const response = await caller.order.create();
+      // expect(response).toBeDefined();
+      // expect(response?.clientSecret).toBeDefined();
+      // expect(response?.customerId).toBeDefined();
+    });
+  });
   /**
-   * // Setup requires trpc caller to be passed mock values
-   * 
    * 1. Confirm that correct items are being used in order
    * 2. Test order totalPrice is correct
    * 3. Confirm that Customer Id is correct

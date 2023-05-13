@@ -1,3 +1,5 @@
+Vitest UI PORT: http://localhost:51204/__vitest__/
+
 /**
  * Setup Requirements:
  *    - Nextjs trpc app requires a wrapper implemented using react trpc client 

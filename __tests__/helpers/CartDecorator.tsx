@@ -8,7 +8,6 @@ import { trpcReact } from '@/utils/api';
 
 import { CartProvider } from '@/context/CartContext';
 import { ItemContextProvider } from "@/context/ItemContext";
-import { OrderContextProvider } from "@/context/OrderContext";
 
 /**
  * This file sets up a wrapper around main App component
@@ -30,15 +29,13 @@ export function TrpcWrapper({ children }: PropsWithChildren<object>) {
   return (
     <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-          {/* Main Application to be tested */}
-          <CartProvider>
-            <ItemContextProvider>
-              <OrderContextProvider>
-                <Navbar />
-                {children}
-              </OrderContextProvider>
-            </ItemContextProvider>
-          </CartProvider>
+        {/* Main Application to be tested */}
+        <CartProvider>
+          <ItemContextProvider>
+            <Navbar />
+              {children}
+          </ItemContextProvider>
+        </CartProvider>
       </QueryClientProvider>
     </trpcReact.Provider>
   );

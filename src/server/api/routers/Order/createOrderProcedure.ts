@@ -32,15 +32,6 @@ export const createOrderProcedure = publicProcedure
       items: z.object({
         item: z.object({
           id: z.string(),
-          name: z.string(),
-          media: z.array(z.string()),
-          price: z.number(),
-          quantity: z.number(),
-          theme: z.string(),
-          itemType: z.string(),
-          subType: z.string(),
-          description: z.string(),
-          createdAt: z.string().datetime()
         }).nullish(), //item may be null
         quantity: z.number(),
       }).array(),
@@ -62,6 +53,14 @@ export const createOrderProcedure = publicProcedure
         orderTotal += item.price * quantity;
       }
     });
+
+  
+    //TODO: Check the product information, quantity in stock, and price from db
+    // const product = await prisma.product.findUnique({
+    //   where: {
+    //     id: productId,
+    //   },
+    // });
 
     console.log('itemIds', itemIds);
     console.log('orderTotal', orderTotal);

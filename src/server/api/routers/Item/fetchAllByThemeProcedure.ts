@@ -10,8 +10,21 @@ export const fetchAllByThemeProcedure = publicProcedure
   )
   .query(({ ctx, input }) => {
     if (!input?.theme) throw new TRPCError({ code: 'BAD_REQUEST' });
-    if (input?.theme) {
-      return ctx.prisma.item.findMany({ where: { theme: input.theme } });
+    if (!!input?.theme) {
+      return ctx.prisma.item.findMany({ 
+        where: { theme: input.theme },
+        select: {
+          id: true,
+          name: true,
+          theme: true,
+          media: true,
+          price: true,
+          itemType: true,
+          subType: true,
+          quantity: true,
+          description: true,
+        },
+      });
     }
   });
 

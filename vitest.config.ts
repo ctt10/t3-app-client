@@ -6,13 +6,17 @@ import react from '@vitejs/plugin-react';
 import path from 'path'
 
 // https://vitejs.dev/config/
-const config = {
+export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
+    reporters: ["default", "html"],
+    coverage: {
+      provider: 'istanbul', // or 'c8'
+    },
     setupFiles: [
       '__tests__/setup/index.ts',
-      '__tests__/setup/LocalStorageMock.ts',
+      '__tests__/setup/setup-teardown-hook.ts',
     ],
   },
   resolve: {
@@ -20,6 +24,4 @@ const config = {
       '@': path.resolve(__dirname, './src')
     },
   },
-};
-
-export default defineConfig(config);
+});

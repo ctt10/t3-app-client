@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState, useContext } from "react";
 import numeral from "numeral";
 
@@ -45,14 +46,12 @@ export default function SingleItem(props: CustomPageProps) {
 	}, [itemId, setItemId, fetchedItems, fetchedItem])
 
 	return ( 
-		<div
-			className = "flex flex-col h-full w-3/4 items-center justify-center p-5 rounded-xl items-center justify-center bg-DarkPeriwinkle rounded-xl"
-		>
+		<div className="flex flex-col h-full w-3/4 items-center justify-center p-5 rounded-xl items-center justify-center bg-DarkPeriwinkle rounded-xl">
 		{/* CONTAINER TOP */ }
-		< div className = "flex h-full w-full m-4 pr-6" >
+		<div className="flex h-full w-full m-4 pr-6">
 
 			{/* CONTAINER TOP LEFT */ }
-			< div className = "mt-10 mx-5" >
+			<div className="mt-10 mx-5" >
 				{/* MEDIA DISPLAY */ }
 					<ImageCarousel itemImages={displayItem?.media ? displayItem.media : [""]} />
 			</div>
@@ -61,7 +60,7 @@ export default function SingleItem(props: CustomPageProps) {
 			< div className = "flex flex-col h-GalleryItem w-full bg-white rounded-lg p-5 mt-10 border-2 border-Grape" >
 
 				{/* ITEM INFO CONTAINER */ }
-				< div className = "flex flex-col h-full w-full gap-y-6 text-xl" >
+				<div className = "flex flex-col h-full w-full gap-y-6 text-xl" >
 					<p>
 						<b className="font-CocoBiker text-2xl text-black mr-2">
 							Item:

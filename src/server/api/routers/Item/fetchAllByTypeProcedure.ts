@@ -10,8 +10,21 @@ export const fetchAllByTypeProcedure = publicProcedure
   )
   .query(({ ctx, input }) => {
     if (!input?.itemType) throw new TRPCError({ code: 'BAD_REQUEST' });
-    if (input?.itemType) {
-      return ctx.prisma.item.findMany({ where: { itemType: input.itemType } });
+    if (!!input?.itemType) {
+      return ctx.prisma.item.findMany({ 
+        where: { itemType: input.itemType },
+        select: {
+          id: true,
+          name: true,
+          theme: true,
+          media: true,
+          price: true,
+          itemType: true,
+          subType: true,
+          quantity: true,
+          description: true,
+        },
+      });
     }
   });
 

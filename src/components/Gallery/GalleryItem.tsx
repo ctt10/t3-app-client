@@ -9,14 +9,6 @@ interface CustomPageProps {
     key: number
 }
 
-// const { addToCart } = useContext(CartContext);
-// <button
-// 	onClick={() => addToCart(item)}
-// 	data-testid="#addToCart"
-// >
-// 	Add to Cart
-// </button>
-
 /**
  * This component hosts an image
  * the image is the main backgroud of the card

@@ -1,0 +1,13 @@
+switch item.img to item.media[]
+accept a video at first position and images after
+
+
+when creating items the params must be 
+
+
+
+next step for client: 
+Build out tests for create order, 
+update create order flow:
+	only require Ids, (remove excess data passed from gallery items)
+	to get item info from database before calculating price

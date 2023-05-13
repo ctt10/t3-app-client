@@ -13,4 +13,4 @@ class Storage {
   }
 }
 
-export const localStorageMock = Object.create(new Storage());
+export const localStorageMock = Object.create(new Storage()) as Storage;

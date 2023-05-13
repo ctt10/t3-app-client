@@ -28,7 +28,7 @@ export declare interface IGalleryItem {
   subType: string
   quantity: number
   description: string
-  createdAt: string
+  createdAt?: string
 }
 
 export declare interface OrderItem extends IGalleryItem {

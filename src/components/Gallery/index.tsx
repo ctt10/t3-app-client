@@ -1,9 +1,11 @@
+import React from "react";
 import { useContext, useEffect } from "react";
 import { ItemContext } from "@/context/ItemContext";
 import { GalleryItem } from "@/components"
 
 /** @types */
-import { type Item } from "@prisma/client";
+// import { type Item } from "@prisma/client";
+import { type IGalleryItem } from "@/types";
 
 interface CustomPageProps {
    itemType: string|string[]|undefined
@@ -34,7 +36,7 @@ export default function Gallery(props: CustomPageProps) {
             <div className="flex flex-wrap w-full justify-start py-16 max-w-[1800px]">
             {/* Item List */}
             { fetchedItems && fetchedItems?.map(
-                (item: Item, i: number) => (
+                (item: IGalleryItem, i: number) => (
                     <div 
                         className="flex overflow-wrap my-5 rounded-2xl group perspective preserve-3d"
                         key={i}
